@@ -1,75 +1,66 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, ProgressBarAndroid } from 'react-native';
-import Weather from './Screens/Weather';
-import * as API_KEY from './config/weather';
+import { View, Button, ImageBackground } from 'react-native'; 
+import WeatherIndex from './weatherIndex';
+import HackerNews from './newsIndex';
 
 class App extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state ={
-			isLoading: true,
-			temperature: 0,
-			weatherCondition: null,
-			error: null
+		this.state = {
+			weather: false,
+			news: false
 		};
 	}
 
-	componentWillMount() {
-		navigator.geolocation.getCurrentPosition(
-		      position => {
-		        this.fetchWeather(position.coords.latitude, position.coords.longitude);
-		      },
-			error => {
-				this.setState({
-					error: 'Error getting weather conditions'
-				});
-			},{enableHighAccuracy: true, timeout: 2000, maximumAge: 10000}
-			);
-	}	
+	showWeather = () => {
+		this.setState({ weather: !this.state.weather });
+	}
 
-	fetchWeather( lat =25, lon= 25 ){
-		fetch(
-				`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY.WEATHER_API_KEY}&units=metric`
-			)
-		.then(res => res.json())
-		.then(res => {console.log(res)
-			this.setState({
-				isLoading: false,
-				temperature: res.main.temp,
-				weatherCondition: res.weather[0].main
-			});
-		})
-		.catch(err => {
-			this.setState({
-				error: err
-			})
-		});
+	showNews = () => {
+		this.setState({ news: !this.state.news });
 	}
 
 	render() {
-		const { isLoading, weatherCondition, temperature } = this.state;
+		const { weather, news } = this.state; 
 		return (
-				<View style={styles.container}>
-				{isLoading ? (
-					<ProgressBarAndroid />
-					// <Text>Fetching the weather</Text>
-					) : (
-					<Weather weather={weatherCondition} temperature={temperature}/>
-					) }
+			
+				<View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center', flexDirection: 'column'}}>
+					<ImageBackground 
+						source={{uri: 'https://cdn.thecustomdroid.com/wp-content/uploads/2018/02/Download-Redmi-Note-5-Wallpapers-Preview-8.jpg'}}
+						style={{ width: '100%', height: '100%' }}
+					>
+					{
+						weather ?
+						<WeatherIndex />
+						:
+						 <Button 
+							onPress={this.showWeather}
+							title="Weather"
+							color="green"
+							style={{ 'width': 50 }}
+
+						 />
+
+					}
+
+					{
+						news ? 
+						<HackerNews />
+						:
+						<Button 
+							onPress={this.showNews}
+							title="News"
+							color="blue"
+							style={{ 'width': 50 }}
+
+						 />
+					}
+					</ImageBackground>	
 				</View>
+			
 			);
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		flexDirection:'column',
-		backgroundColor: '#fff',
-		alignItems: 'stretch',
-		justifyContent: 'center'
-	}
-});
 
 export default App;
