@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import PropTypes from 'prop-types';
 
-const News = (news) => {
+const News = ({news , title}) => {console.log(news)
 	return (
 		<View style={{flex: 1}}>
 			<FlatList 
 				data={news}
-				renderItems={({item}) => <Text>{item.news}</Text> }
+				renderItem={({key, item}) => <Text key={key}>{key}.{item.content}</Text> }
 			/>
 		</View>
 		);
 }
 
 
-news.proptypes = {
-	news: PropTypes.string.isrequired
+News.proptypes = {
+	news: PropTypes.array.isrequired
 };
 
 export default News;

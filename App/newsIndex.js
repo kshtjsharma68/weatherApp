@@ -1,42 +1,37 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text, ProgressBarAndroid } from 'react-native';
-import News from './Screens/news';
+import News from './Screens/News';
 import * as API_KEY from './config/weather';
 
-class newsIndex extends Component {
+class NewsIndex extends Component {
+
+	static navigationOption = {
+		title: 'News'
+	};
 
 	constructor(props) {
 		super(props);
 		this.state ={
 			isLoading: true,
 			news: 0,
+			title: 'Nothing in news',
 			error: null
 		};
 	}
 
 	componentWillMount() {
-		navigator.geolocation.getCurrentPosition(
-		      position => {
-		        this.fetchWeather(position.coords.latitude, position.coords.longitude);
-		      },
-			error => {
-				this.setState({
-					error: 'Error getting weather conditions'
-				});
-			},{enableHighAccuracy: true, timeout: 2000, maximumAge: 10000}
-			);
+		this.fetchNews();
 	}	
 
-	fetchWeather( lat =25, lon= 25 ){
+	fetchNews( lat =25, lon= 25 ){
 		fetch(
-				`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY.WEATHER_API_KEY}&units=metric`
+				`https://newsapi.org/v2/everything?q=bitcoin&from=2019-01-01&sortBy=publishedAt&apiKey=${API_KEY.NEWS_API_KEY}`
 			)
 		.then(res => res.json())
-		.then(res => {console.log(res)
+		.then(res => {
 			this.setState({
 				isLoading: false,
-				temperature: res.main.temp,
-				weatherCondition: res.weather[0].main
+				news: res.articles
 			});
 		})
 		.catch(err => {
@@ -47,14 +42,18 @@ class newsIndex extends Component {
 	}
 
 	render() {
-		const { isLoading, news } = this.state;
+		const { isLoading, news, title, error } = this.state;
+
 		return (
 				<View style={styles.container}>
 				{isLoading ? (
-					<ProgressBarAndroid />
+					<View>
+						<ProgressBarAndroid />
+						<Text>{ error }</Text>
+					</View>	
 					// <Text>Fetching the weather</Text>
 					) : (
-					<News news={news}/>
+					<News news={news} title={title}/>
 					) }
 				</View>
 			);
@@ -71,4 +70,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default WeatherIndex;
+export default NewsIndex;
