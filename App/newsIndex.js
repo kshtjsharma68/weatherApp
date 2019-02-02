@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, ProgressBarAndroid } from 'react-native';
+import { StyleSheet, View, Text, ProgressBarAndroid, Button } from 'react-native';
 import News from './Screens/News';
-import * as API_KEY from './config/weather';
+import links from './config/newsLinks';
+
+
 
 class NewsIndex extends Component {
 
@@ -15,28 +17,35 @@ class NewsIndex extends Component {
 			isLoading: true,
 			news: 0,
 			title: 'Nothing in news',
-			error: null
+			error: ''
 		};
 	}
 
 	componentWillMount() {
-		this.fetchNews();
+		// this.fetchNews();
 	}	
 
-	fetchNews( lat =25, lon= 25 ){
+	fetchNews( url ){
 		fetch(
-				`https://newsapi.org/v2/everything?q=bitcoin&from=2019-01-01&sortBy=publishedAt&apiKey=${API_KEY.NEWS_API_KEY}`
+				`${url}`
 			)
 		.then(res => res.json())
-		.then(res => {
-			this.setState({
-				isLoading: false,
-				news: res.articles
-			});
+		.then(res => {console.log(res)
+			if ( res.status == "error" ) {
+					this.setState({
+						isLoading: true,
+						error: res.message
+					});
+			} else {
+					this.setState({
+						isLoading: false,
+						news: res.articles
+					});	
+			}			
 		})
 		.catch(err => {
 			this.setState({
-				error: err
+				error: String(err)
 			})
 		});
 	}
@@ -46,15 +55,19 @@ class NewsIndex extends Component {
 
 		return (
 				<View style={styles.container}>
-				{isLoading ? (
+				{ Object.keys(links).map((v, k) => {
+					return <Button title={v} key={k} onPress={() => this.fetchNews(links[v])} color="red"/>
+					}) 
+				}
+				{isLoading ? 
 					<View>
 						<ProgressBarAndroid />
-						<Text>{ error }</Text>
+						<Text>{error}</Text>
 					</View>	
-					// <Text>Fetching the weather</Text>
-					) : (
+					
+					 : 
 					<News news={news} title={title}/>
-					) }
+					 }
 				</View>
 			);
 	}

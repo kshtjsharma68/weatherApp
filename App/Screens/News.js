@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import PropTypes from 'prop-types';
 
-const News = ({news , title}) => {console.log(news)
+const News = ({news , title}) => {
 	return (
 		<View style={{flex: 1}}>
 			<FlatList 
