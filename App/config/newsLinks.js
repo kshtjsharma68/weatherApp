@@ -8,4 +8,6 @@ const links = {
 	wallStreet: `https://newsapi.org/v2/everything?domains=wsj.com&apiKey=${NEWS_API_KEY}`
 };
 
-export default links;
+const colors = [ 'red', 'green', 'blue' ];
+
+export { links, colors };

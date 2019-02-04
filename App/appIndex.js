@@ -41,7 +41,7 @@ class Index extends Component {
 					>
 					{
 						isLoading ?
-						<View style={{justifyContent: 'center'}}>
+						<View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 5}}>
 							<Button 
 								onPress={() => navigation.navigate('Weather')}
 								title="Weather"
