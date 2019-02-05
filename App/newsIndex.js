@@ -15,14 +15,16 @@ class NewsIndex extends Component {
 		super(props);
 		this.state ={
 			isLoading: true,
-			news: 0,
+			news: [],
 			title: 'Nothing in news',
 			error: ''
 		};
 	}
 
-	componentWillMount() {
-		// this.fetchNews();
+	componentDidMount() {
+		this.setState({
+			isLoading: false
+		});
 	}
 
 	fetchNews( url ){
@@ -61,11 +63,14 @@ class NewsIndex extends Component {
 							})
 						}
 					</View>
-					{isLoading ? 
+					{ isLoading ? 
+						<ProgressBarAndroid />
+						: <Text></Text>
+					}
+					{!news.length  ? 
 						<View style={styles.news}>
-							<ProgressBarAndroid />
-							<Text style={styles.centerText}>Click on button to get news..</Text>
 							<Text>{error}</Text>
+							<Text style={styles.centerText}>Click on button to get news..</Text>
 						</View>	
 						
 						 : 

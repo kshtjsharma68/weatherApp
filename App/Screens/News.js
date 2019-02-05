@@ -8,12 +8,19 @@ class News extends Component {
 		super(props);
 	}
 
-	_keyExtractor = (item, index) => item;
+	_keyExtractor = (item, index) => item.url;
 
 	_renderItem = (item, key) => {
-		console.log('item',item)
 		return(
-				<Text title={item.author}><Image source={item.urlToImage} />{item.title}</Text>
+			<View style={{borderTopColor: 'black', borderTopWidth: 1, padding: 5 }}>
+				<View style={{flex: 1, flexDirection: 'row', alignItems:'stretch', justifyContent: 'space-evenly'}}>
+					<Image source={{uri: item.urlToImage}} style={{width: 50, height: 50}} />
+					<Text>{item.publishedAt}</Text>
+				</View>
+				<View style={{flex: 1, alignItems: 'center'}}>
+				  <Text title={item.author} key={key} >{item.title}</Text>
+				</View>	
+			</View>  		
 			);
 	}
 
